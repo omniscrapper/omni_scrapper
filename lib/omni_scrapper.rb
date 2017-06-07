@@ -8,4 +8,8 @@ require 'omni_scrapper/configuration'
 require 'omni_scrapper/scrapper_builder'
 require 'omni_scrapper/scrapper'
 
-OmniScrapper::FileUtils.userspace_files.each { |file| require("./#{file}") }
+begin
+  OmniScrapper::FileUtils.userspace_files.each { |file| require("./#{file}") }
+rescue OmniScrapper::UnknownFrameworkException => e
+  p "[WARNING] #{e.to_s}"
+end

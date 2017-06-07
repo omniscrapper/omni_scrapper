@@ -1,3 +1,6 @@
+require 'omni_scrapper/exceptions/unknown_framework_exception'
+require 'omni_scrapper/exceptions/unsupported_framework_exception'
+
 module OmniScrapper
   module FileUtils
     BASE_NAME = ''
