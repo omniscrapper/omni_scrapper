@@ -8,6 +8,9 @@ require 'omni_scrapper/configuration'
 require 'omni_scrapper/scrapper_builder'
 require 'omni_scrapper/scrapper'
 
+module OmniScrapper
+end
+
 begin
   OmniScrapper::FileUtils.userspace_files.each { |file| require("./#{file}") }
 rescue OmniScrapper::UnknownFrameworkException => e
