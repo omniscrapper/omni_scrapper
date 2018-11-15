@@ -39,7 +39,7 @@ module OmniScrapper
       end
 
       Object.const_set(scrappers_namespace_name, Module.new) unless defined? scrappers_namespace_module
-      scrappers_namespace_module.const_set(scrapper_name.to_s.capitalize, Module.new) unless defined? scrapper_module
+      scrappers_namespace_module.const_set(classify_name(scrapper_name), Module.new) unless defined? scrapper_module
       scrapper_module.const_set(scrapper_class_name, klass)
     end
 
@@ -61,7 +61,7 @@ module OmniScrapper
     end
 
     def scrapper_module
-      @scrapper_module ||= Object.const_get("#{scrappers_namespace_name}::#{scrapper_name.capitalize}")
+      @scrapper_module ||= Object.const_get("#{scrappers_namespace_name}::#{classify_name(scrapper_name)}")
     end
 
     def class_methods_module
@@ -69,7 +69,11 @@ module OmniScrapper
     end
 
     def scrapper_module_array
-      [scrappers_namespace_name.to_s, scrapper_name.to_s.capitalize]
+      [scrappers_namespace_name.to_s, classify_name(scrapper_name)]
+    end
+
+    def classify_name(name)
+      name.to_s.split('_').map { |w| w.capitalize }.join
     end
   end
 end
