@@ -35,6 +35,7 @@ module OmniScrapper
     end
 
     def get_field(options)
+      return options[:value] if options[:value]
       return __send__(options[:method], page) if options[:method]
       return options[:do].call(page) if options[:do]
 
