@@ -1,3 +1,5 @@
+require 'omni_scrapper/proxy'
+
 module OmniScrapper
   def self.included(base)
     base.extend(OmniScrapper::ClassMethods)
@@ -26,6 +28,7 @@ module OmniScrapper
     self.agent = Mechanize.new do |a|
       a.user_agent_alias = 'Mac Safari'
     end
+    self.agent.set_proxy(Proxy.host, Proxy.port) if Proxy.enabled?
   end
 
   def scrap_page(page)
