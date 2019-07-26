@@ -15,6 +15,10 @@ module OmniScrapper
     def scrappers
       ObjectSpace.each_object(Class).select { |klass| klass < self }
     end
+
+    def scrapper_by_name(scrapper_name)
+      self.scrappers.find { |klass| klass.name.include?(scrapper_name) }
+    end
   end
 
   module ClassMethods
