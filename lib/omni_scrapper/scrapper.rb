@@ -1,15 +1,18 @@
 require 'omni_scrapper/proxy'
 
+# This module is an entry-point of the whole OmniScrapper gem.
+# It provides a public interface for any gem user, who want to interact with scrappers.
 module OmniScrapper
   def self.included(base)
     base.extend(OmniScrapper::ClassMethods)
   end
 
   class << self
+    # Builds a bunch of omni_scrapper classes based on provided configuration
     def setup(scrapper_name)
       config = OmniScrapper::Configuration.new
       yield(config)
-      OmniScrapper::ScrapperBuilder.new(scrapper_name, config).define_classes
+      scrappers = OmniScrapper::ScrapperBuilder.new(scrapper_name, config).define_classes
     end
 
     def scrappers

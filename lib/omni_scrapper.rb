@@ -1,4 +1,5 @@
 require 'mechanize'
+require 'omni_scrapper/crawlers'
 require 'omni_scrapper/normalizers'
 require 'omni_scrapper/result'
 require 'omni_scrapper/file_utils'

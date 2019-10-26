@@ -8,15 +8,18 @@ module OmniScrapper
     end
 
     def define_classes
-      define_scrapper_class(scrapper_name, config)
-      define_page_class
+      sc = define_scrapper_class(scrapper_name, config)
+      pc = define_page_class
+      [sc, pc]
     end
 
     private
 
     def define_scrapper_class(scrapper_name, config)
       current_module = scrapper_module
-      klass = Class.new(config.crawler) do
+      crawler = ::OmniScrapper::Crawlers.by_name(config.crawler)
+
+      klass = Class.new(crawler) do
         include OmniScrapper
 
         config.anchors.each do |name, options|
@@ -41,11 +44,13 @@ module OmniScrapper
       Object.const_set(scrappers_namespace_name, Module.new) unless defined? scrappers_namespace_module
       scrappers_namespace_module.const_set(classify_name(scrapper_name), Module.new) unless defined? scrapper_module
       scrapper_module.const_set(scrapper_class_name, klass)
+      klass
     end
 
     def define_page_class
       page_class = scrapper_module.const_set('Page', Class.new(OmniScrapper::Page))
       page_class.__send__(:include, class_methods_module) if scrapper_module.const_defined?('ScrapMethods')
+      page_class
     end
 
     def scrappers_namespace_module
