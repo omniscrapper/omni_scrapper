@@ -2,12 +2,14 @@ require 'json-schema'
 
 module OmniScrapper
   class Schema
-    def validate!(data)
-      JSON::Validator.validate!(schema, data)
+    attr_reader :definition
+
+    def initialize(definition)
+      @definition = definition
     end
 
-    def schema
-      fail 'Implement in child class'
+    def validate!(data)
+      JSON::Validator.validate!(definition, data)
     end
   end
 end

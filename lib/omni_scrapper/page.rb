@@ -26,8 +26,12 @@ module OmniScrapper
       # TODO: Fix this is not working
       # schema_pattern method is not available here
       # uncomment when move this to scrapper level
-      config.schema.new.validate!(result_data) if config.schema
+      schema.validate!(result_data) if config.schema
       result_data
+    end
+
+    def schema
+      Schema.new(config.schema)
     end
 
     def id_within_site
