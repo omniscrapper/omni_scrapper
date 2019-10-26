@@ -8,12 +8,18 @@ module OmniScrapper
     end
 
     def define_classes
+      define_root_namespace
       sc = define_scrapper_class(scrapper_name, config)
       pc = define_page_class
       [sc, pc]
     end
 
     private
+
+    def define_root_namespace
+      root = Object.const_set(scrappers_namespace_name, Module.new)
+      root.const_set(classify_name(scrapper_name), Module.new)
+    end
 
     def define_scrapper_class(scrapper_name, config)
       current_module = scrapper_module
