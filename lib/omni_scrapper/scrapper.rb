@@ -40,7 +40,7 @@ module OmniScrapper
 
   def scrap_page(page)
     puts "Scrapping #{page.uri.to_s}"
-    data = scrapper_page_class.new(page, configuration).data
+    data = Page.new(page, configuration).data
     OmniScrapper::Result.new(name).tap { |result| result.build(data) }
   end
 end

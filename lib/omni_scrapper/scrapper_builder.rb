@@ -9,9 +9,7 @@ module OmniScrapper
 
     def define_classes
       define_root_namespace
-      sc = define_scrapper_class(scrapper_name, config)
-      pc = define_page_class
-      [sc, pc]
+      define_scrapper_class(scrapper_name, config)
     end
 
     private
@@ -53,12 +51,6 @@ module OmniScrapper
       klass
     end
 
-    def define_page_class
-      page_class = scrapper_module.const_set('Page', Class.new(OmniScrapper::Page))
-      page_class.__send__(:include, class_methods_module) if scrapper_module.const_defined?('ScrapMethods')
-      page_class
-    end
-
     def scrappers_namespace_module
       @scrappers_namespace_module ||= Object.const_get(scrappers_namespace_name)
     end
@@ -73,14 +65,6 @@ module OmniScrapper
 
     def scrapper_module
       @scrapper_module ||= Object.const_get("#{scrappers_namespace_name}::#{classify_name(scrapper_name)}")
-    end
-
-    def class_methods_module
-      @class_methods_module ||= Object.const_get scrapper_module_array.push('ScrapMethods').join('::')
-    end
-
-    def scrapper_module_array
-      [scrappers_namespace_name.to_s, classify_name(scrapper_name)]
     end
 
     def classify_name(name)
