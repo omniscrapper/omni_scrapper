@@ -1,4 +1,5 @@
 module OmniScrapper
+  # Extracts and transforms data from the page according to configuration
   class Page
     attr_accessor :page, :config
 
@@ -26,8 +27,9 @@ module OmniScrapper
       # TODO: Fix this is not working
       # schema_pattern method is not available here
       # uncomment when move this to scrapper level
-      schema.validate!(result_data) if config.schema
-      result_data
+      result_data.tap do |data|
+        schema.validate!(result_data)
+      end
     end
 
     def schema
@@ -77,6 +79,7 @@ module OmniScrapper
         normalizer.new(value).normalized
       when Symbol
         normalizer_name = normalizer.to_s.split('_').map { |w| w.capitalize }.join
+        # TODO: take normalizer from repository instead of objectspace
         normalizer_class = normalizers_namespace.const_get(normalizer_name)
         normalizer_class.new(value).normalized
       when Proc

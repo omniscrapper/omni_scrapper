@@ -11,6 +11,9 @@ module OmniScrapper
       @anchors = {}
     end
 
+    # TODO: make config.crawler.blabla
+    # to define crawler-specific fields,
+    # in similar to fields definition manner
     def field(name, options = {})
       #validate_crawler_presence!(options)
       validate_field_options!(options)

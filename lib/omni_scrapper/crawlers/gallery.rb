@@ -1,7 +1,17 @@
 module OmniScrapper
   module Crawlers
-    class Gallery
+    # The most trivial crawler for gallery-like websites.
+    # It recursively walks through paginated lists and visit each link matching with
+    # defined patten on this page. Then it get's back and proceeds crawling.
+    class Gallery < Base
       attr_accessor :agent, :current_page, :entrypoint
+
+      REQUIRED_ATTRIBUTES = %i(
+        entrypoint
+        next_page_link
+        page_link
+        id_within_site
+      )
 
       def run(&block)
         agent.get(entrypoint) do |page|
@@ -9,7 +19,7 @@ module OmniScrapper
         end
         agent.keep_alive = false
         collect(pages_to_collect, &block)
-        p "Collect page: #{entrypoint}"
+        puts "[Crawler] visited: #{entrypoint}"
 
         self.class.new(next_page_url).run(&block) if next_page_url
       end
@@ -31,7 +41,7 @@ module OmniScrapper
 
       def pages_to_collect
         current_page
-          .links_with(href: ad_page_link_pattern)
+          .links_with(href: page_link_pattern)
           .reject { |l| l.text.strip == '' }
           .uniq { |l| l.href }
       end

@@ -6,7 +6,6 @@ require 'omni_scrapper/page'
 require 'omni_scrapper/schema'
 require 'omni_scrapper/configuration'
 require 'omni_scrapper/scrapper_builder'
-require 'omni_scrapper/base'
 
 module OmniScrapper
   class << self
@@ -14,7 +13,7 @@ module OmniScrapper
     def setup(scrapper_name)
       config = OmniScrapper::Configuration.new
       yield(config)
-      OmniScrapper::ScrapperBuilder.new(scrapper_name, config).define_classes
+      OmniScrapper::ScrapperBuilder.new(scrapper_name, config).build_class
     end
   end
 end

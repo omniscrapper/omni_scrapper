@@ -1,3 +1,4 @@
+require_relative 'crawlers/base'
 require_relative 'crawlers/gallery'
 
 module OmniScrapper

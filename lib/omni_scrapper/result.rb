@@ -1,4 +1,6 @@
 module OmniScrapper
+  # Represents the final state of dataset, which will be transferred to
+  # and external storage
   class Result
     attr_accessor :scrapper_name, :data, :timestamp, :checksum
 
