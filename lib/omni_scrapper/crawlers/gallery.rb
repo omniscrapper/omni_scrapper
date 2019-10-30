@@ -14,13 +14,9 @@ module OmniScrapper
       )
 
       def run(&block)
-        agent.get(entrypoint) do |page|
-          self.current_page = page
-        end
-        agent.keep_alive = false
-        collect(pages_to_collect, &block)
+        self.current_page = agent.get(entrypoint)
         puts "[Crawler] visited: #{entrypoint}"
-
+        collect(pages_to_collect, &block)
         self.class.new(next_page_url).run(&block) if next_page_url
       end
 

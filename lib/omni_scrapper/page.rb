@@ -1,19 +1,25 @@
 module OmniScrapper
   # Extracts and transforms data from the page according to configuration
   class Page
-    attr_accessor :page, :config
+    attr_accessor :body, :uri, :page, :config
 
-    def initialize(page, config)
-      self.page = page
+    def initialize(uri, body, config)
+      self.body = body 
+      self.uri = uri
       self.config = config
     end
 
     def data
+      self.page = parse_html(body)
       result_data = prepare_data
       validate_data!(result_data)
     end
 
     private
+
+    def parse_html(body)
+      Nokogiri::HTML(body)
+    end
 
     # TODO: should be moved to scrapper
     def prepare_data
@@ -37,13 +43,13 @@ module OmniScrapper
     end
 
     def id_within_site
-      extract(page.uri.to_s, config.anchors[:id_within_site][:pattern])
+      extract(self.uri.to_s, config.anchors[:id_within_site][:pattern])
     end
 
     def get_field(options)
       return options[:value] if options[:value]
-      return __send__(options[:method], page) if options[:method]
-      return options[:do].call(page) if options[:do]
+      return __send__(options[:method], body) if options[:method]
+      return options[:do].call(body) if options[:do]
 
       value = find(options[:selector])
       value = normalize(value, options[:normalizer])

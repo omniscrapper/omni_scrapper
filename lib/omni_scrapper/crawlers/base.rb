@@ -15,9 +15,13 @@ module OmniScrapper
         validate_crawler_configuration!
 
         self.entrypoint = entrypoint_url || entrypoint_pattern
+        # TODO: make user agent configurable explicitly, or rotate a list of
+        # predefined values on each call, or via other rotation policy.
         self.agent = Mechanize.new do |a|
           a.user_agent_alias = 'Mac Safari'
         end
+        self.agent.keep_alive = false
+        # TODO: also allow to configure proxy settings via some external config.
         self.agent.set_proxy(Proxy.host, Proxy.port) if Proxy.enabled?
       end
 
@@ -25,7 +29,7 @@ module OmniScrapper
 
       def scrap_page(page)
         puts "[Crawler] Scrapping #{page.uri.to_s}"
-        data = Page.new(page, configuration).data
+        data = Page.new(page.uri, page.body, configuration).data
         OmniScrapper::Result.new(name).tap { |result| result.build(data) }
       end
 

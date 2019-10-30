@@ -14,6 +14,10 @@ module OmniScrapper
         crawlers[name] || DEFAULT_CRAWLER
       end
 
+      def all_names
+        crawlers.keys
+      end
+
       private
 
       def crawlers
