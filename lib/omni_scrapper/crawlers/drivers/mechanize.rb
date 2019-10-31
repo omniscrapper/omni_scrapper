@@ -22,7 +22,11 @@ module OmniScrapper
         end
 
         def visit(url)
-          self.current_page = agent.get(entrypoint)
+          self.current_page = agent.get(url)
+        end
+
+        def current_page_body
+          current_page.body
         end
       end
     end

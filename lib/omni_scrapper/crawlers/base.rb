@@ -37,15 +37,16 @@ module OmniScrapper
         start_crawler(&block)
       end
 
-      def scrape_page(uri, body)
+      def scrape_page(uri)
         # TODO: inject some hook into omniscrapper, to be executed at this moment
+        visit(uri)
 
         data = Page
-          .new(uri, body, configuration)
+          .new(uri, current_page_body, configuration)
           .data
           .tap { |result| validate_data!(result) }
 
-        OmniScrapper::Result.new(name).tap { |result| result.build(data) }
+        OmniScrapper::Result.new(name, uri).tap { |result| result.build(data) }
       end
 
       private

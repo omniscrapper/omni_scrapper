@@ -14,31 +14,33 @@ module OmniScrapper
         %i(id_within_site)
       end
 
-      def start_crawler
-        self.current_page = agent.get(entrypoint)
-        puts "[Crawler] visited: #{entrypoint}, next_page_url: #{next_page_url} pattern: #{next_page_link_pattern}"
+      def start_crawler(&block)
+        visit(entrypoint)
+        puts "[Crawler] visited: #{entrypoint}"
 
-        pages_to_collect.each do |page_link|
+        gallery_pages.each do |page_link|
+          # TODO: configure delay in crawler params
           sleep(1)
-          page = agent.click(page_link)
-          data = scrape_page(page.uri.to_s, page.body)
-          yield(data)
+          data = scrape_page(page_link)
+          block.call(data)
         end
-
         self.class.new(next_page_url).run(&block) if next_page_url
       end
 
       private
 
       def next_page_url
-        current_page.link_with(text: next_page_link_pattern)&.resolved_uri
+        current_page
+          .links
+          .find { |l| l.text.strip == next_page_link_pattern }&.resolved_uri
       end
 
-      def pages_to_collect
+      def gallery_pages
         current_page
           .links_with(href: page_link_pattern)
           .reject { |l| l.text.strip == '' }
-          .uniq { |l| l.href }
+          .map { |l| l.resolved_uri }
+          .uniq
       end
     end
   end
