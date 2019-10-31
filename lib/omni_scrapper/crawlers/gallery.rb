@@ -1,17 +1,14 @@
+require_relative 'drivers/mechanize'
+
 module OmniScrapper
   module Crawlers
     # The most trivial crawler for gallery-like websites.
     # It recursively walks through paginated lists and visit each link matching with
     # defined patten on this page. Then it get's back and proceeds crawling.
     class Gallery < Base
-      attr_accessor :agent, :current_page, :entrypoint
+      include Drivers::Mechanize
 
-      REQUIRED_ATTRIBUTES = %i(
-        entrypoint
-        next_page_link
-        page_link
-        id_within_site
-      )
+      REQUIRED_ATTRIBUTES = BASE_REQUIRED_ATTRIBUTES
 
       def run(&block)
         self.current_page = agent.get(entrypoint)
@@ -30,7 +27,7 @@ module OmniScrapper
         page_links.each do |page_link|
           sleep(1)
           page = agent.click(page_link)
-          data = scrap_page(page)
+          data = scrape_page(page)
           yield(data)
         end
       end

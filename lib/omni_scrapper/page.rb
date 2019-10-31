@@ -5,7 +5,7 @@ module OmniScrapper
 
     # TODO: move uri and id_within_site extraction to crawler
     def initialize(uri, body, config)
-      self.body = body 
+      self.body = body
       self.uri = uri
       self.config = config
     end
@@ -13,7 +13,6 @@ module OmniScrapper
     def data
       self.page = parse_html(body)
       result_data = prepare_data
-      validate_data!(result_data)
     end
 
     private
@@ -28,20 +27,6 @@ module OmniScrapper
         value = get_field(field_options)
         result.merge(field_name => value)
       end.merge(id_within_site: id_within_site)
-    end
-
-    # TODO: Move validation to scrapper
-    def validate_data!(result_data)
-      # TODO: Fix this is not working
-      # schema_pattern method is not available here
-      # uncomment when move this to scrapper level
-      result_data.tap do |data|
-        schema.validate!(result_data)
-      end
-    end
-
-    def schema
-      Schema.new(config.schema)
     end
 
     def id_within_site
