@@ -9,13 +9,16 @@ module OmniScrapper
         def run(&block)
           new.run(&block)
         end
+
+        def required_attributes
+          BASE_REQUIRED_ATTRIBUTES + self.crawler_specific_required_attributes
+        end
       end
 
       BASE_REQUIRED_ATTRIBUTES = %i(
         entrypoint
         next_page_link
         page_link
-        id_within_site
       )
 
       attr_accessor :current_page, :entrypoint
@@ -31,18 +34,14 @@ module OmniScrapper
       end
 
       def run(&block)
-        self.current_page = agent.get(entrypoint)
-        puts "[Crawler] visited: #{entrypoint}"
-        collect(pages_to_collect, &block)
-        self.class.new(next_page_url).run(&block) if next_page_url
+        start_crawler(&block)
       end
 
-      def scrape_page(page)
-        puts "[Crawler] Scrapping #{page.uri.to_s}"
+      def scrape_page(uri, body)
         # TODO: inject some hook into omniscrapper, to be executed at this moment
 
         data = Page
-          .new(page.uri, page.body, configuration)
+          .new(uri, body, configuration)
           .data
           .tap { |result| validate_data!(result) }
 
@@ -65,7 +64,7 @@ module OmniScrapper
       end
 
       def validate_crawler_configuration!
-        self.class::REQUIRED_ATTRIBUTES.each do |attribute_name|
+        self.class.required_attributes.each do |attribute_name|
           raise MissingCrawlerConfigurationField, attribute_name unless configuration.anchors.keys.include?(attribute_name)
         end
       end

@@ -20,6 +20,10 @@ module OmniScrapper
         def set_user_agent(user_agent)
           self.agent.user_agent_alias = 'Mac Safari'
         end
+
+        def visit(url)
+          self.current_page = agent.get(entrypoint)
+        end
       end
     end
   end
