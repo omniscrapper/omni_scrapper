@@ -3,6 +3,7 @@ module OmniScrapper
   class Page
     attr_accessor :body, :uri, :page, :config
 
+    # TODO: move uri and id_within_site extraction to crawler
     def initialize(uri, body, config)
       self.body = body 
       self.uri = uri
@@ -21,7 +22,7 @@ module OmniScrapper
       Nokogiri::HTML(body)
     end
 
-    # TODO: should be moved to scrapper
+    # TODO: pass fields array instead of the whole config to page
     def prepare_data
       config.fields.reduce({}) do |result, (field_name, field_options)|
         value = get_field(field_options)
@@ -29,6 +30,7 @@ module OmniScrapper
       end.merge(id_within_site: id_within_site)
     end
 
+    # TODO: Move validation to scrapper
     def validate_data!(result_data)
       # TODO: Fix this is not working
       # schema_pattern method is not available here
@@ -95,6 +97,7 @@ module OmniScrapper
       end
     end
 
+    # TODO: create repo
     def normalizers_namespace
       root_namespace.const_get('Normalizers')
     end
