@@ -1,4 +1,5 @@
 require_relative 'drivers/mechanize'
+require_relative 'drivers/ferrum'
 
 module OmniScrapper
   module Crawlers
@@ -6,7 +7,8 @@ module OmniScrapper
     # It recursively walks through paginated lists and visit each link matching with
     # defined patten on this page. Then it get's back and proceeds crawling.
     class Gallery < Base
-      include Drivers::Mechanize
+      #include Drivers::Mechanize
+      include Drivers::Ferrum
 
       # TODO: replace with this macros
       #required_attributes :id_within_site
@@ -36,8 +38,7 @@ module OmniScrapper
       end
 
       def gallery_pages
-        current_page
-          .links_with(href: page_link_pattern)
+          urls_with_pattern(next_page_link_pattern)
           .reject { |l| l.text.strip == '' }
           .map { |l| l.resolved_uri }
           .uniq

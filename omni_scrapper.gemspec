@@ -9,5 +9,6 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.files         = `git ls-files`.split($/)
 
-  s.add_runtime_dependency "mechanize"
+  s.add_runtime_dependency 'mechanize'
+  s.add_runtime_dependency 'ferrum'
 end
