@@ -1,6 +1,8 @@
 require_relative 'drivers/mechanize'
 require_relative 'drivers/ferrum'
 
+require 'pry'
+
 module OmniScrapper
   module Crawlers
     # The most trivial crawler for gallery-like websites.
@@ -20,6 +22,7 @@ module OmniScrapper
         visit(entrypoint)
         puts "[Crawler] visited: #{entrypoint}"
 
+        #binding.pry
         gallery_pages.each do |page_link|
           # TODO: configure delay in crawler params
           sleep(1)
@@ -38,9 +41,8 @@ module OmniScrapper
       end
 
       def gallery_pages
-          urls_with_pattern(next_page_link_pattern)
-          .reject { |l| l.text.strip == '' }
-          .map { |l| l.resolved_uri }
+        urls_with_pattern(page_link_pattern)
+          .reject { |l| l == '' }
           .uniq
       end
     end

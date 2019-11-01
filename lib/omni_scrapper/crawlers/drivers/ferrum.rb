@@ -1,4 +1,5 @@
 require 'ferrum'
+require 'uri'
 
 module OmniScrapper
   module Crawlers
@@ -9,7 +10,7 @@ module OmniScrapper
         def prepare_driver
           # TODO: probably we need additional class Driver,
           # which encapsulates all agent specific calls
-          self.agent = ::Ferrum::Browser.new
+          self.agent = ::Ferrum::Browser.new(timeout: 10)
         end
 
         # TODO: delegate those methods from crawler to agent
@@ -26,7 +27,25 @@ module OmniScrapper
         end
 
         def urls_with_pattern(pattern)
-          agent.at_xpath(pattern)
+          agent.xpath(pattern)
+            .map { |n| url_to(n.attribute('href')) }
+        end
+
+        def current_page_body
+          agent.body
+        end
+
+        def current_uri
+          URI(agent.current_url)
+        end
+
+        def url_to(path)
+          path_uri = URI(path)
+          return path unless path_uri.host == nil
+          result = URI("#{current_uri.scheme}://#{current_uri.host}#{path}")
+          result.to_s
+        rescue URI::InvalidURIError
+          ''
         end
       end
     end

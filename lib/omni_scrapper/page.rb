@@ -24,6 +24,7 @@ module OmniScrapper
     # TODO: pass fields array instead of the whole config to page
     def prepare_data
       config.fields.reduce({}) do |result, (field_name, field_options)|
+        next result if field_options[:selector] == ''
         value = get_field(field_options)
         result.merge(field_name => value)
       end.merge(id_within_site: id_within_site)
@@ -46,7 +47,6 @@ module OmniScrapper
     end
 
     def find(selector)
-      selector = selector.gsub('/tbody', '')
       page.xpath(selector).text.strip
     end
 
