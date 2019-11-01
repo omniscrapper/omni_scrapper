@@ -52,6 +52,7 @@ module OmniScrapper
 
     def extract(value, pattern)
       return value unless pattern
+      pattern = ::Regexp.new(pattern) if pattern.class == String 
       value.scan(pattern).flatten.first
     end
 
