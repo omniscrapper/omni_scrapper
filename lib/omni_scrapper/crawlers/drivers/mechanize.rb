@@ -25,8 +25,26 @@ module OmniScrapper
           self.current_page = agent.get(url)
         end
 
+        def urls_with_pattern(pattern)
+          agent.current_page.xpath(pattern)
+            .map { |a| url_to(a.attribute('href').value) }
+        end
+
         def current_page_body
-          current_page.body
+          agent.current_page.body
+        end
+
+        def current_uri
+          URI(agent.current_page.canonical_uri)
+        end
+
+        def url_to(path)
+          path_uri = URI(path)
+          return path unless path_uri.host == nil
+          result = URI("#{current_uri.scheme}://#{current_uri.host}#{path}")
+          result.to_s
+        rescue URI::InvalidURIError
+          ''
         end
       end
     end
