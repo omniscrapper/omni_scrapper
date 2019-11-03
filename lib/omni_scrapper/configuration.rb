@@ -11,6 +11,9 @@ module OmniScrapper
       @anchors = {}
     end
 
+    # TODO: make config.crawler.blabla
+    # to define crawler-specific fields,
+    # in similar to fields definition manner
     def field(name, options = {})
       #validate_crawler_presence!(options)
       validate_field_options!(options)
@@ -34,11 +37,11 @@ module OmniScrapper
 
     def get_variable(name)
       # TODO: raise error if unexisting field is requested
-      @anchors[name][:pattern] 
+      @anchors[name][:pattern]
     end
 
     def validate_crawler_presence!(options)
-      #return if 
+      #return if
       fail OmniScrapper::CrawlerNotDefinedException
     end
 

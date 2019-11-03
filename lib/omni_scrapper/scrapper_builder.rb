@@ -1,24 +1,21 @@
 module OmniScrapper
+  # It creates an instance of new Scrapper class with defined configuration.
   class ScrapperBuilder
-    attr_accessor :scrapper_name, :config
+    attr_reader :scrapper_name, :config
 
     def initialize(scrapper_name, config)
-      self.scrapper_name = scrapper_name
-      self.config = config
+      @scrapper_name = scrapper_name
+      @config = config
     end
 
-    def define_classes
-      define_scrapper_class(scrapper_name, config)
-      define_page_class
+    def build_class
+      generate_class(scrapper_name, config)
     end
 
     private
 
-    def define_scrapper_class(scrapper_name, config)
-      current_module = scrapper_module
-      klass = Class.new(config.crawler) do
-        include OmniScrapper
-
+    def generate_class(scrapper_name, config)
+      Class.new(crawler) do
         config.anchors.each do |name, options|
           define_method("#{name}_pattern") do
             options[:pattern]
@@ -32,48 +29,11 @@ module OmniScrapper
         define_method :name do
           scrapper_name
         end
-
-        define_method :scrapper_page_class do
-          current_module.const_get('Page')
-        end
       end
-
-      Object.const_set(scrappers_namespace_name, Module.new) unless defined? scrappers_namespace_module
-      scrappers_namespace_module.const_set(classify_name(scrapper_name), Module.new) unless defined? scrapper_module
-      scrapper_module.const_set(scrapper_class_name, klass)
     end
 
-    def define_page_class
-      page_class = scrapper_module.const_set('Page', Class.new(OmniScrapper::Page))
-      page_class.__send__(:include, class_methods_module) if scrapper_module.const_defined?('ScrapMethods')
-    end
-
-    def scrappers_namespace_module
-      @scrappers_namespace_module ||= Object.const_get(scrappers_namespace_name)
-    end
-
-    def scrappers_namespace_name
-      :Scrappers
-    end
-
-    def scrapper_class_name
-      :Scrapper
-    end
-
-    def scrapper_module
-      @scrapper_module ||= Object.const_get("#{scrappers_namespace_name}::#{classify_name(scrapper_name)}")
-    end
-
-    def class_methods_module
-      @class_methods_module ||= Object.const_get scrapper_module_array.push('ScrapMethods').join('::')
-    end
-
-    def scrapper_module_array
-      [scrappers_namespace_name.to_s, classify_name(scrapper_name)]
-    end
-
-    def classify_name(name)
-      name.to_s.split('_').map { |w| w.capitalize }.join
+    def crawler
+      ::OmniScrapper::Crawlers.by_name(config.crawler)
     end
   end
 end

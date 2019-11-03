@@ -1,10 +1,13 @@
 module OmniScrapper
+  # Represents the final state of dataset, which will be transferred to
+  # and external storage
   class Result
-    attr_accessor :scrapper_name, :data, :timestamp, :checksum
+    attr_accessor :scrapper_name, :data, :timestamp, :checksum, :uri
 
-    def initialize(scrapper_name)
+    def initialize(scrapper_name, uri)
       self.scrapper_name = scrapper_name
       self.timestamp = Time.now
+      self.uri = uri
     end
 
     def build(data)
