@@ -7,8 +7,8 @@ module OmniScrapper
     # It recursively walks through paginated lists and visit each link matching with
     # defined patten on this page. Then it get's back and proceeds crawling.
     class Gallery < Base
-      #include Drivers::Mechanize
-      include Drivers::Ferrum
+      include Drivers::Mechanize
+      #include Drivers::Ferrum
 
       # TODO: replace with this macros
       #required_attributes :id_within_site
