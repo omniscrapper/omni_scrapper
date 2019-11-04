@@ -15,6 +15,18 @@ module OmniScrapper
       self.checksum = Signature.new(data).calculate
     end
 
+    def to_h
+      {
+        metadata: {
+          scrapper_name: scrapper_name,
+          timestamp: timestamp,
+          checksum: checksum,
+          uri: uri
+        },
+        data: data
+      }
+    end
+
     private
 
     class Signature
