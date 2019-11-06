@@ -18,6 +18,7 @@ module OmniScrapper
 
       def start_crawler(&block)
         visit(entrypoint)
+        next_page = next_page_url
         puts "[Crawler] visited: #{entrypoint}"
 
         gallery_pages.each do |page_link|
@@ -26,15 +27,18 @@ module OmniScrapper
           data = scrape_page(page_link)
           block.call(data)
         end
-        self.class.new(next_page_url).run(&block) if next_page_url
+        self.class.new(next_page).run(&block) if next_page_url
       end
 
       private
 
-      def next_page_url
-        current_page
-          .links
-          .find { |l| l.text.strip == next_page_link_pattern }&.resolved_uri
+      def url_to(path)
+        path_uri = URI(path)
+        return path unless path_uri.host == nil
+        result = URI("#{current_uri.scheme}://#{current_uri.host}#{path}")
+        result.to_s
+      rescue URI::InvalidURIError
+        ''
       end
 
       def gallery_pages

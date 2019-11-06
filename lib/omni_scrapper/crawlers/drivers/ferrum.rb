@@ -39,13 +39,12 @@ module OmniScrapper
           URI(agent.current_url)
         end
 
-        def url_to(path)
-          path_uri = URI(path)
-          return path unless path_uri.host == nil
-          result = URI("#{current_uri.scheme}://#{current_uri.host}#{path}")
-          result.to_s
-        rescue URI::InvalidURIError
-          ''
+        def next_page_url
+          path = agent
+            .at_xpath(next_page_link_pattern)
+            &.attribute('href')
+            .to_s
+          url_to path
         end
       end
     end

@@ -38,13 +38,13 @@ module OmniScrapper
           URI(agent.current_page.canonical_uri)
         end
 
-        def url_to(path)
-          path_uri = URI(path)
-          return path unless path_uri.host == nil
-          result = URI("#{current_uri.scheme}://#{current_uri.host}#{path}")
-          result.to_s
-        rescue URI::InvalidURIError
-          ''
+        def next_page_url
+          path = agent.current_page
+            .xpath(next_page_link_pattern)
+            &.last
+            &.attribute('href')
+            .to_s
+          url_to path
         end
       end
     end
