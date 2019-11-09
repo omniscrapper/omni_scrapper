@@ -25,9 +25,22 @@ module OmniScrapper
           self.current_page = agent.get(url)
         end
 
+        # TODO: unify naming of this and next methods
         def urls_with_pattern(pattern)
-          agent.current_page.xpath(pattern)
-            .map { |a| url_to(a.attribute('href').value) }
+          agent.current_page
+            .xpath(pattern)
+            .map do |a|
+              url_to(a.attribute('href').value)
+            end
+        end
+
+        def link_url(pattern)
+          path = agent.current_page
+            .xpath(pattern)
+            &.last
+            &.attribute('href')
+            .to_s
+          url_to path
         end
 
         def current_page_body
@@ -35,16 +48,7 @@ module OmniScrapper
         end
 
         def current_uri
-          URI(agent.current_page.canonical_uri)
-        end
-
-        def next_page_url
-          path = agent.current_page
-            .xpath(next_page_link_pattern)
-            &.last
-            &.attribute('href')
-            .to_s
-          url_to path
+          URI(agent.current_page.uri)
         end
       end
     end

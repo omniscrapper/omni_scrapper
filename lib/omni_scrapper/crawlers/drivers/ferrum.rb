@@ -39,9 +39,9 @@ module OmniScrapper
           URI(agent.current_url)
         end
 
-        def next_page_url
+        def link_url(pattern)
           path = agent
-            .at_xpath(next_page_link_pattern)
+            .at_xpath(pattern)
             &.attribute('href')
             .to_s
           url_to path

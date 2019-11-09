@@ -49,6 +49,10 @@ module OmniScrapper
         OmniScrapper::Result.new(name, uri).tap { |result| result.build(data) }
       end
 
+      def start_crawler(&block)
+        fail NotImplementedError, 'Implement #start_crawler in specific crawler'
+      end
+
       private
 
       def validate_data!(result_data)
