@@ -35,23 +35,26 @@ module OmniScrapper
     end
 
     def extract(val)
-      return val unless pattern
+      return val if empty?(pattern)
       regex = pattern.class == String ? ::Regexp.new(pattern) : pattern
       val.scan(regex).flatten.first
     end
 
     def type_cast(val)
-      return val unless type_cast_to
-      case type_cast_to.to_s
-      when 'Integer'
+      case field_type.to_s
+      when 'integer'
         val.to_i
+      when 'string'
+        val.to_s
+      when 'array'
+        val.flatten
       else
         val
       end
     end
 
     def normalize(val)
-      return val unless normalizer
+      return val if empty?(normalizer)
       options = { url: url }
       normalizer_class = OmniScrapper::Normalizers.for(normalizer)
 
@@ -64,6 +67,10 @@ module OmniScrapper
 
     def field_type
       schema.type_for(name)
+    end
+
+    def empty?(val)
+      ['', nil].include?(val)
     end
   end
 end

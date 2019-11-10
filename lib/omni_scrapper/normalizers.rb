@@ -12,6 +12,10 @@ module OmniScrapper
       all[type.to_s] || raise(NormalizerNotFound, "No normalizer for #{type}")
     end
 
+    def self.names
+      self.all.keys
+    end
+
     def self.all
       {
         'phone' => OmniScrapper::Normalizers::Phone,
