@@ -1,13 +1,14 @@
 module OmniScrapper
   module Normalizers
     class Base
-      attr_accessor :value
+      attr_reader :value, :options
 
-      def initialize(value)
-        self.value = value
+      def initialize(value, options = {})
+        @value = value
+        @options = options
       end
 
-      def normalized
+      def call
         fail 'Implement in child class'
       end
     end
