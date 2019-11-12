@@ -2,13 +2,17 @@ require 'omni_scrapper/exceptions/crawler_not_defined_exception'
 
 module OmniScrapper
   class Configuration
-    attr_reader :fields, :anchors
+    attr_reader :fields, :anchors, :scrapping_error_handler
 
     SINGLE_OPTS = %i[ do method ]
 
     def initialize
       @fields = {}
       @anchors = {}
+    end
+
+    def scrapping_error_handler=(callable)
+      @scrapping_error_handler = callable
     end
 
     # TODO: make config.crawler.blabla

@@ -13,6 +13,7 @@ module OmniScrapper
     def build(data)
       self.data = data
       self.checksum = Signature.new(data).calculate
+      self
     end
 
     def to_h

@@ -34,7 +34,8 @@ module OmniScrapper
       end
 
       def run(&block)
-        start_crawler(&block)
+        @handler = block
+        start_crawler
       end
 
       def scrape_page(uri)
@@ -46,7 +47,11 @@ module OmniScrapper
           .data
           .tap { |result| validate_data!(result) }
 
-        OmniScrapper::Result.new(name, uri).tap { |result| result.build(data) }
+        result = OmniScrapper::Result.new(name, uri).build(data)
+        @handler.call(result)
+      rescue => e
+        # TODO: notify API about exception
+        configuration.scrapping_error_handler.call(uri, e)
       end
 
       def start_crawler(&block)

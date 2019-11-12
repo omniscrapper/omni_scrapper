@@ -8,7 +8,7 @@ module OmniScrapper
     # Removes extra whitespaces and 
     class Strip < Base
       def call
-        value.gsub(/\s+/, ' ').gsub("\n", '').strip
+        value.gsub(/\s+/, ' ').gsub(/^[\W]/, '').gsub("\n", '').strip
       end
     end
   end

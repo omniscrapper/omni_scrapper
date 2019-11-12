@@ -31,20 +31,20 @@ module OmniScrapper
             .map { |n| url_to(n.attribute('href')) }
         end
 
-        def current_page_body
-          agent.body
-        end
-
-        def current_uri
-          URI(agent.current_url)
-        end
-
         def link_url(pattern)
           path = agent
             .at_xpath(pattern)
             &.attribute('href')
             .to_s
           url_to path
+        end
+
+        def current_page_body
+          agent.body
+        end
+
+        def current_uri
+          URI(agent.current_url)
         end
       end
     end
