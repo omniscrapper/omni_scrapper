@@ -1,5 +1,6 @@
 require_relative 'crawlers/base'
 require_relative 'crawlers/gallery'
+require_relative 'crawlers/gallery_on_ferrum'
 
 module OmniScrapper
   # A repository module for crawlers.
@@ -22,7 +23,8 @@ module OmniScrapper
 
       def crawlers
         {
-          gallery: Gallery
+          gallery: Gallery,
+          gallery_on_ferrum: GalleryOmFerrum
         }
       end
     end

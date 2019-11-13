@@ -16,7 +16,7 @@ module OmniScrapper
         %i(id_within_site)
       end
 
-      def start_crawler(&block)
+      def start_crawler
         visit(entrypoint)
         next_page = link_url(next_page_link_pattern)
         puts "[Crawler] visited: #{entrypoint}"
@@ -24,14 +24,20 @@ module OmniScrapper
         gallery_pages.each do |page_link|
           # TODO: configure delay in crawler params
           sleep(1)
-          data = scrape_page(page_link)
-          block.call(data)
+          scrape_page(page_link)
         end
-        return if root_url == next_page
-        self.class.new(next_page).run(&block) if next_page
+
+        return unless next_page_exists?(next_page)
+
+        self.entrypoint = next_page
+        start_crawler
       end
 
       private
+
+      def next_page_exists?(next_page)
+        next_page && root_url != next_page
+      end
 
       def url_to(path)
         path_uri = URI(path)

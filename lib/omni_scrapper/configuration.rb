@@ -3,10 +3,13 @@ require 'omni_scrapper/exceptions/crawler_not_defined_exception'
 module OmniScrapper
   class Configuration
     attr_reader :fields, :anchors
+    attr_accessor :scrapping_error_handler, :scrapping_success_handler
 
     SINGLE_OPTS = %i[ do method ]
 
     def initialize
+      @scrapping_success_handler = Proc.new { |_, _| }
+      @scrapping_error_handler = Proc.new { |_, _| }
       @fields = {}
       @anchors = {}
     end
@@ -45,6 +48,7 @@ module OmniScrapper
       fail OmniScrapper::CrawlerNotDefinedException
     end
 
+    # TODO: most probably it should be removed, since we don't support ruby procs anymore
     def validate_field_options!(options)
       incorrect_options = (SINGLE_OPTS & options.keys).first
       return unless incorrect_options && options.keys.size > 1

@@ -6,7 +6,7 @@ module OmniScrapper
     class Integer < Base
       class NotFoundError < StandardError; end;
 
-      TYPE_REGEX = ::Regexp.new(/ (\d{1,5})/)
+      TYPE_REGEX = ::Regexp.new(/(\d{1,5})/)
 
       def call
         extracted_value.tap do |result|
