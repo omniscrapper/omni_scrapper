@@ -49,6 +49,7 @@ module OmniScrapper
 
         result = OmniScrapper::Result.new(name, uri).build(data)
         @handler.call(result)
+        configuration.scrapping_success_handler.call(uri, result)
       rescue => e
         # TODO: notify API about exception
         configuration.scrapping_error_handler.call(uri, e)
