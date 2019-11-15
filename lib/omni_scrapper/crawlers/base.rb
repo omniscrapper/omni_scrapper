@@ -36,10 +36,11 @@ module OmniScrapper
       def run(&block)
         @handler = block
         start_crawler
+        # TODO: rescue possible exceptions here
+        # and call crawler_error_handler
       end
 
       def scrape_page(uri)
-        # TODO: inject some hook into omniscrapper, to be executed at this moment
         visit(uri)
 
         data = Page
