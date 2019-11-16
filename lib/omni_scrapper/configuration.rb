@@ -3,13 +3,16 @@ require 'omni_scrapper/exceptions/crawler_not_defined_exception'
 module OmniScrapper
   class Configuration
     attr_reader :fields, :anchors
-    attr_accessor :scrapping_error_handler, :scrapping_success_handler
+    attr_accessor :scrapping_error_handler, :scrapping_success_handler, 
+      :scrapping_start_handler
 
     SINGLE_OPTS = %i[ do method ]
 
     def initialize
       @scrapping_success_handler = Proc.new { |_, _| }
       @scrapping_error_handler = Proc.new { |_, _| }
+      @scrapping_start_handler = Proc.new { |_| }
+
       @fields = {}
       @anchors = {}
     end

@@ -41,6 +41,7 @@ module OmniScrapper
       end
 
       def scrape_page(uri)
+        configuration.scrapping_start_handler.call(uri)
         visit(uri)
 
         data = Page
