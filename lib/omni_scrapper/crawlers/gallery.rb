@@ -42,6 +42,7 @@ module OmniScrapper
       def url_to(path)
         path_uri = URI(path)
         return path unless path_uri.host == nil
+        path = "/#{path}" unless path[0] == '/'
         URI("#{root_url}#{path}").to_s
       rescue URI::InvalidURIError
         ''
