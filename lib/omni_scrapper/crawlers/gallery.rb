@@ -40,6 +40,7 @@ module OmniScrapper
       end
 
       def url_to(path)
+        return if path == ''
         path_uri = URI(path)
         return path unless path_uri.host == nil
         path = "/#{path}" unless path[0] == '/'
