@@ -10,7 +10,11 @@ module OmniScrapper
         def prepare_driver
           # TODO: probably we need additional class Driver,
           # which encapsulates all agent specific calls
-          self.agent = ::Ferrum::Browser.new(timeout: 10)
+          self.agent = ::Ferrum::Browser.new(
+            timeout: 10,
+            headless: true,
+            disable_gpu: true
+          )
         end
 
         # TODO: delegate those methods from crawler to agent
