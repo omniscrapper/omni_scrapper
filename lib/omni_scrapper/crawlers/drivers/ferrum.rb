@@ -12,8 +12,11 @@ module OmniScrapper
           # which encapsulates all agent specific calls
           self.agent = ::Ferrum::Browser.new(
             timeout: 10,
-            headless: true,
-            disable_gpu: true
+            browser_options: {
+              'headless' => true,
+              'disable-gpu' => true,
+              'no-sandbox' => true
+            }
           )
         end
 
